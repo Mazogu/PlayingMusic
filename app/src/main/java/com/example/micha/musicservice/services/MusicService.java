@@ -2,7 +2,9 @@ package com.example.micha.musicservice.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 
 import com.example.micha.musicservice.R;
@@ -11,13 +13,14 @@ public class MusicService extends Service {
     MediaPlayer media;
     int[] musicList;
     int currentTrack;
+    IBinder iBinder = new MusicBinder();
     public MusicService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return iBinder;
     }
 
     @Override
@@ -78,5 +81,11 @@ public class MusicService extends Service {
             return 0;
         }
         return media.getDuration();
+    }
+
+    public class MusicBinder extends Binder{
+        public MusicService getMusicService(){
+            return MusicService.this;
+        }
     }
 }
