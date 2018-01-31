@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         if(bound){
+            music.remove();
             unbindService(connection);
+            bound = false;
         }
         super.onDestroy();
     }

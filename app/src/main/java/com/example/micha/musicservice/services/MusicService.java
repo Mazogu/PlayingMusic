@@ -3,6 +3,7 @@ package com.example.micha.musicservice.services;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
@@ -39,13 +40,8 @@ public class MusicService extends Service {
 
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        remove();
-        return super.onUnbind(intent);
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
 
         switch (intent.getAction()) {
             case MainActivity.SERVICE_START:
@@ -66,6 +62,10 @@ public class MusicService extends Service {
             case MusicService.SERVICE_FASTFORWARD:
                 fastForward();
                 break;
+            default:
+                Log.d(TAG, "onStartCommand: Switch statement reached");
+                break;
+
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -83,26 +83,35 @@ public class MusicService extends Service {
             }
         });
         media.start();
-        Intent playIntent = new Intent(this,MusicService.class);
+        Intent playIntent = new Intent(getApplicationContext(),MusicService.class);
         playIntent.setAction(MusicService.SERVICE_PLAY);
 
-        Intent stopIntent = new Intent(this, MusicService.class);
+        Intent stopIntent = new Intent(getApplicationContext(), MusicService.class);
         stopIntent.setAction(MusicService.SERVICE_STOP);
 
-        Intent rewindIntent = new Intent(this, MusicService.class);
+        Intent rewindIntent = new Intent(getApplicationContext(), MusicService.class);
         rewindIntent.setAction(MusicService.SERVICE_REWIND);
 
-        Intent fastforwardIntent = new Intent(this, MusicService.class);
+        Intent fastforwardIntent = new Intent(getApplicationContext(), MusicService.class);
         fastforwardIntent.setAction(MusicService.SERVICE_FASTFORWARD);
 
-        PendingIntent pendingPlay = PendingIntent.getActivity(this, 0, playIntent, 0);
-        PendingIntent pendingStop = PendingIntent.getActivity(this, 0, stopIntent, 0);
-        PendingIntent pendingRewind = PendingIntent.getActivity(this, 0, rewindIntent, 0);
-        PendingIntent pendingFastforward = PendingIntent.getActivity(this, 0, fastforwardIntent, 0);
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        TaskStackBuilder tasks = TaskStackBuilder.create(this);
+        tasks.addNextIntent(intent);
+        PendingIntent pending = tasks.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        //Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.stop)
-        //      .addAction(R.drawable.play,"Music Player",pendingIntent).build();
-        //startForeground(NOTIFICATION_ID, notification);
+        PendingIntent pendingPlay = PendingIntent.getService(this, 0, playIntent, 0);
+        PendingIntent pendingStop = PendingIntent.getService(this, 0, stopIntent, 0);
+        PendingIntent pendingRewind = PendingIntent.getService(this, 0, rewindIntent, 0);
+        PendingIntent pendingFastforward = PendingIntent.getService(this, 0, fastforwardIntent, 0);
+
+        Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.mini_skeith3rd)
+                .setContentTitle("Media Player")
+                .addAction(R.drawable.rewind,"Rewind Button",pendingRewind)
+                .addAction(R.drawable.play,"Play Button",pendingPlay)
+                .addAction(R.drawable.stop,"Stop Button",pendingStop)
+                .addAction(R.drawable.fastforward,"Fastforward Button",pendingFastforward).setContentIntent(pending).build();
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     public int getProgress() {
