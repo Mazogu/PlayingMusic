@@ -64,6 +64,9 @@ public class MusicService extends Service {
             return;
         }
         currentTrack = (currentTrack - 1) % musicList.length;
+        if(currentTrack == -1){
+            currentTrack = musicList.length - 1;
+        }
         media.stop();
         media.release();
         media = MediaPlayer.create(this, musicList[currentTrack]);
@@ -104,5 +107,14 @@ public class MusicService extends Service {
         public MusicService getMusicService(){
             return MusicService.this;
         }
+    }
+
+    public void seek(int input){
+        if(media == null){
+            return;
+        }
+        float percent = input/100f;
+        float progess = percent*media.getDuration();
+        media.seekTo(Math.round(progess));
     }
 }

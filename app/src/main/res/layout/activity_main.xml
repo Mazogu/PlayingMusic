@@ -17,8 +17,15 @@
         android:layout_marginTop="10dp"
         android:id="@+id/songProgress"
         android:layout_below="@id/songName"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00/0:00"
+        android:layout_alignEnd="@id/songProgress"
+        android:id="@+id/timestamp"
+        android:layout_below="@id/songProgress"/>
     <LinearLayout
-        android:layout_below="@id/songProgress"
+        android:layout_below="@id/timestamp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
