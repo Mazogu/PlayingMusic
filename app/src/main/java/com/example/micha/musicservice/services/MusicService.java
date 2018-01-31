@@ -9,6 +9,8 @@ import android.os.IBinder;
 
 import com.example.micha.musicservice.R;
 
+import java.io.IOException;
+
 public class MusicService extends Service {
     MediaPlayer media;
     int[] musicList;
@@ -28,6 +30,13 @@ public class MusicService extends Service {
         currentTrack = 0;
         musicList = new int[]{R.raw.dream_catcher,R.raw.inspiring_storytelling,R.raw.swift,R.raw.a_promising_future,R.raw.pocket_size_moon};
         media = MediaPlayer.create(this, musicList[currentTrack]);
+        media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                currentTrack = (currentTrack+1)%musicList.length;
+                media = MediaPlayer.create(MusicService.this, musicList[currentTrack]);
+            }
+        });
         media.start();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -44,7 +53,10 @@ public class MusicService extends Service {
             return;
         }
         currentTrack = (currentTrack + 1) % musicList.length;
+        media.stop();
+        media.release();
         media = MediaPlayer.create(this, musicList[currentTrack]);
+        media.start();
     }
 
     public void rewind(){
@@ -52,11 +64,15 @@ public class MusicService extends Service {
             return;
         }
         currentTrack = (currentTrack - 1) % musicList.length;
+        media.stop();
+        media.release();
         media = MediaPlayer.create(this, musicList[currentTrack]);
+        media.start();
     }
 
     public void stop(){
-        media.stop();
+        media.pause();
+        media.seekTo(0);
     }
 
     public void play(){
@@ -66,6 +82,7 @@ public class MusicService extends Service {
         else{
             media.start();
         }
+
     }
 
     public boolean isPlaying(){
