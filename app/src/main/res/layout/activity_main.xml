@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.micha.musicservice.MainActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:hint="Song Name"
+        android:id="@+id/songName"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/songProgress"
+        android:layout_below="@id/songName"/>
+    <LinearLayout
+        android:layout_below="@id/songProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:src="@drawable/rewind"
+            android:scaleType="centerInside"
+            android:layout_width="@dimen/zero"
+            android:onClick="handleMusic"
+            android:id="@+id/rewind"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_weight="1"/>
+        <ImageButton
+            android:layout_width="@dimen/zero"
+            android:scaleType="centerInside"
+            android:src="@drawable/play"
+            android:id="@+id/play"
+            android:onClick="handleMusic"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_weight="1"/>
+        <ImageButton
+            android:layout_width="@dimen/zero"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_weight="1"
+            android:id="@+id/stop"
+            android:onClick="handleMusic"
+            android:src="@drawable/stop"
+            android:scaleType="centerInside"/>
+        <ImageButton
+            android:scaleType="centerInside"
+            android:layout_width="@dimen/zero"
+            android:id="@+id/fastforward"
+            android:onClick="handleMusic"
+            android:src="@drawable/fastforward"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
