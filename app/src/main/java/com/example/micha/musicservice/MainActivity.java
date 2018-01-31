@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private TextView time;
     private Timer timer;
+    public static final String SERVICE_START = "Start";
 
 
     @Override
@@ -68,16 +69,18 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.play:
                 if(!bound){
+                    play.setImageResource(R.drawable.pause);
+                    intent.setAction(SERVICE_START);
                     bindService(intent, connection, Context.BIND_AUTO_CREATE);
                     startService(intent);
                     timer.schedule(updateTrack,0,1000);
                 }
                 else{
                     if(music.isPlaying()){
-                        play.setImageResource(R.drawable.pause);
+                        play.setImageResource(R.drawable.play);
                     }
                     else{
-                        play.setImageResource(R.drawable.play);
+                        play.setImageResource(R.drawable.pause);
                     }
                     music.play();
                 }
@@ -135,4 +138,12 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        if(bound){
+            unbindService(connection);
+        }
+        super.onDestroy();
+    }
 }
